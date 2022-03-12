@@ -87,6 +87,8 @@ public class ProductService {
 		for(CategoryDTO catDto : dto.getCategories()) {
 			Category category = categoryRepository.getOne(catDto.getId());
 			entity.getCategories().add(category);
+			//Também podia ser como abaixo e aí a parte acima do getOne podia ser apagado.
+			//entity.getCategories().add(new Category(catDto.getId(), null));
 		}
 		
 	}
