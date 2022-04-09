@@ -34,7 +34,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
-	@Autowired 
+	@Autowired
 	private JwtAccessTokenConverter accessTokenConverter;
 	
 	@Autowired
@@ -46,22 +46,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private JwtTokenEnhancer tokenEnhancer;
 	
-	
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated");
+		security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
 	}
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		
 		clients.inMemory()
 		.withClient(clientId)
 		.secret(passwordEncoder.encode(clientSecret))
 		.scopes("read", "write")
 		.authorizedGrantTypes("password")
 		.accessTokenValiditySeconds(jwtDuration);
-		
 	}
 
 	@Override
@@ -75,6 +72,4 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.accessTokenConverter(accessTokenConverter)
 		.tokenEnhancer(chain);
 	}
-
-	
 }

@@ -20,16 +20,16 @@ import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class CategoryService {
-	
+
 	@Autowired
 	private CategoryRepository repository;
 	
 	@Transactional(readOnly = true)
-	public Page<CategoryDTO> findAllPaged(Pageable pageable){
+	public Page<CategoryDTO> findAllPaged(Pageable pageable) {
 		Page<Category> list = repository.findAll(pageable);
 		return list.map(x -> new CategoryDTO(x));
 	}
-	
+
 	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id) {
 		Optional<Category> obj = repository.findById(id);
@@ -52,20 +52,21 @@ public class CategoryService {
 			entity.setName(dto.getName());
 			entity = repository.save(entity);
 			return new CategoryDTO(entity);
-		} catch(EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Id not found "+id);
 		}
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Id not found " + id);
+		}		
 	}
 
 	public void delete(Long id) {
 		try {
 			repository.deleteById(id);
-		} catch(EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Id not found "+id);
 		}
-		  catch(DataIntegrityViolationException e) {
+		catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Id not found " + id);
+		}
+		catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integrity violation");
 		}
 	}
-
 }
