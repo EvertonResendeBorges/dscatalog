@@ -9,10 +9,12 @@ import { SpringPage } from 'types/vendor/spring';
 import { AxiosParams } from 'types/vendor/axios';
 import { BASE_URL } from 'util/request';
 import axios from 'axios';
+import CardLoader from './CardLoader';
 
 const Catalog = () => {
 
     const [page, setPage] = useState<SpringPage<Product>>();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         
@@ -24,11 +26,14 @@ const Catalog = () => {
                 size: 12
             },
         }
-
+        setIsLoading(true);
         axios(params)
             .then(response => {
                 setPage(response.data);
-            });
+            })
+            .finally(() => {
+                setIsLoading(false);
+            } );
     }, []);
 
     return (
@@ -39,7 +44,8 @@ const Catalog = () => {
 
             <div className="row">
 
-                {page?.content.map(product => 
+                {isLoading ? <CardLoader /> : (
+                    page?.content.map(product => 
 
                      (
                         <div className="col-sm-6 col-lg-4 col-xl-3" key={product.id}>
@@ -49,7 +55,7 @@ const Catalog = () => {
                         </div> 
                     )
 
-                )}
+                ))}
 
             </div>
 
