@@ -3,7 +3,7 @@ import './styles.css';
 import { Link } from 'react-router-dom';
 import ButtonIcon from 'components/ButtonIcon';
 import { useForm } from "react-hook-form";
-import { requestBackendLogin } from 'util/request';
+import { getAuthData, requestBackendLogin, saveAuthData } from 'util/request';
 import { useState } from 'react';
 
 type FormData = {
@@ -20,12 +20,15 @@ const Login = () => {
   const onSubmit = (formData : FormData) => {
     requestBackendLogin(formData)
     .then(response => {
+      saveAuthData(response.data);
+      const token = getAuthData().access_token
+      console.log('TOKEN GERADO: ' + token)
       setHasError(false);
       console.log('SUCESSO', response);
     })
     .catch(error => {
-      setHasError(true);
-      console.log('ERRO', error);
+      setHasError(true)
+      console.log('ERRO', error)
     });
     
   };
